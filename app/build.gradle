@@ -13,7 +13,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "int", "LIMIT", "9000"
-        buildConfigField "String", "BASEURL", "\"http://192.168.0.9:5000/\""
+        buildConfigField "String", "BASEURL", "\"http://192.168.1.106:5000/\""
         buildConfigField "int", "CACHETIME", "432000" // 5days
     }
     packagingOptions {

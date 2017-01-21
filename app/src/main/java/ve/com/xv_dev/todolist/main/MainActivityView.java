@@ -1,5 +1,6 @@
 package ve.com.xv_dev.todolist.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ve.com.xv_dev.todolist.TodoList.TodoList;
@@ -16,5 +17,7 @@ public interface MainActivityView {
 
     void onFailure(String appErrorMessage);
 
-    void todoListResponse(List<Todo> todoList);
+    void todoListResponse(ArrayList<Todo> todoList);
+
+    void initRecycler();
 }

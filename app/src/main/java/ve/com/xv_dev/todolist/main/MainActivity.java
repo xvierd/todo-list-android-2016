@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,12 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import ve.com.xv_dev.todolist.BaseApp;
 import ve.com.xv_dev.todolist.R;
+import ve.com.xv_dev.todolist.main.adapter.RecyclerTodoAdapter;
 import ve.com.xv_dev.todolist.models.Todo;
 import ve.com.xv_dev.todolist.networking.Service;
 
@@ -30,6 +34,9 @@ public class MainActivity extends BaseApp
     @Inject
     public Service service;
     private ProgressDialog progress;
+    private RecyclerView recycler;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager lManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,7 +141,11 @@ public class MainActivity extends BaseApp
     }
 
     @Override
-    public void todoListResponse(List<Todo> todoList) {
+    public void todoListResponse(ArrayList<Todo> todoList) {
+
+
+        adapter = new RecyclerTodoAdapter(service,todoList);
+        recycler.setAdapter(adapter);
 
         Long date;
 
@@ -144,5 +155,15 @@ public class MainActivity extends BaseApp
 
         }
 
+    }
+
+    @Override
+    public void initRecycler() {
+
+        recycler = (RecyclerView) findViewById(R.id.list_todo);
+        recycler.setHasFixedSize(true);
+
+        lManager = new LinearLayoutManager(this);
+        recycler.setLayoutManager(lManager);
     }
 }

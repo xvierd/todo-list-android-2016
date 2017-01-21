@@ -1,5 +1,6 @@
 package ve.com.xv_dev.todolist.main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 import ve.com.xv_dev.todolist.models.Todo;
 import ve.com.xv_dev.todolist.networking.NetworkError;
+import ve.com.xv_dev.todolist.networking.Response;
 import ve.com.xv_dev.todolist.networking.Service;
 
 /**
@@ -28,13 +30,13 @@ public class MainActivityPresenter {
 
     public void getTodoList() {
         view.showWait();
+        view.initRecycler();
         Subscription subscription = service.getTodoList(new Service.GetTodoListCallback() {
             @Override
-            public void onSuccess(List<Todo> todoList) {
+            public void onSuccess(ArrayList<Todo> todoList) {
                 view.removeWait();
                 view.todoListResponse(todoList);
             }
-
 
             @Override
             public void onError(NetworkError networkError) {
@@ -45,18 +47,19 @@ public class MainActivityPresenter {
 
         });
 
-    /*public void getTodoList() {
-        view.showWait();
-        Map<String, String> data = new HashMap<>();
-        data.put("email", "joanny@k.com");
-        data.put("password", "123456");
-        Subscription subscription = service.getTodoList(new Service.GetTodoListCallback() {
-            @Override
-            public void onSuccess(List<Todo> todoList) {
-                view.removeWait();
-                view.todoListResponse(todoList);
-            }
+        subscriptions.add(subscription);
+    }
 
+    public void editTodo(Map<String, Object> data) {
+
+
+        view.showWait();
+        Subscription subscription = service.editTodo(new Service.EditTodoCallback() {
+
+            @Override
+            public void onSuccess(String response) {
+                view.removeWait();
+            }
 
             @Override
             public void onError(NetworkError networkError) {
@@ -65,7 +68,7 @@ public class MainActivityPresenter {
                 view.removeWait();
             }
 
-        }, data);*/
+        }, data);
 
         subscriptions.add(subscription);
     }

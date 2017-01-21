@@ -1,9 +1,12 @@
 package ve.com.xv_dev.todolist.networking;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.*;
+import okhttp3.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -28,13 +31,13 @@ public class Service {
         return networkService.getTodoList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorResumeNext(new Func1<Throwable, Observable<? extends List<Todo>>>() {
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends ArrayList<Todo>>>() {
                     @Override
-                    public Observable<? extends List<Todo>> call(Throwable throwable) {
+                    public Observable<? extends ArrayList<Todo>> call(Throwable throwable) {
                         return Observable.error(throwable);
                     }
                 })
-                .subscribe(new Subscriber<List<Todo>>() {
+                .subscribe(new Subscriber<ArrayList<Todo>>() {
                     @Override
                     public void onCompleted() {
 
@@ -47,8 +50,39 @@ public class Service {
                     }
 
                     @Override
-                    public void onNext(List<Todo> todoList) {
+                    public void onNext(ArrayList<Todo> todoList) {
                         callback.onSuccess(todoList);
+
+                    }
+                });
+    }
+
+    public Subscription editTodo(final EditTodoCallback callback, Map<String, Object> data) {
+
+        return networkService.editTodo(data)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends String>>() {
+                    @Override
+                    public Observable<? extends String> call(Throwable throwable) {
+                        return Observable.error(throwable);
+                    }
+                })
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(new NetworkError(e));
+
+                    }
+
+                    @Override
+                    public void onNext(String response) {
+                        callback.onSuccess(response);
 
                     }
                 });
@@ -90,8 +124,11 @@ public class Service {
     }*/
 
     public interface GetTodoListCallback{
-        void onSuccess(List<Todo> todoList);
-
+        void onSuccess(ArrayList<Todo> todoList);
+        void onError(NetworkError networkError);
+    }
+    public interface EditTodoCallback{
+        void onSuccess(String response);
         void onError(NetworkError networkError);
     }
 }

@@ -2,13 +2,19 @@ package ve.com.xv_dev.todolist.networking;
 
 
 
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.*;
+import retrofit2.*;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import rx.Observable;
 import ve.com.xv_dev.todolist.models.Todo;
 
@@ -19,7 +25,11 @@ import ve.com.xv_dev.todolist.models.Todo;
 public interface NetworkService {
 
     @GET("api/todo")
-    Observable<List<Todo>> getTodoList();
+    Observable<ArrayList<Todo>> getTodoList();
+
+    @FormUrlEncoded
+    @PUT("api/todo")
+    Observable<String> editTodo(@FieldMap Map<String, Object> data);
     /*@POST("app/users")
     Observable<List<User>> getCityList();
 

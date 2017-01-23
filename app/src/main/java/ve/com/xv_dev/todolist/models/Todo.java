@@ -16,12 +16,12 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Todo {
 
-    private ObjectId _id;
+    private Map<String, String> _id;
     private Map<String, Long> date;
     private String note;
     private Boolean executed;
 
-    public Todo(ObjectId _id, Map<String, Long> date, String note, Boolean executed) {
+    public Todo(Map<String, String> _id, Map<String, Long> date, String note, Boolean executed) {
         this._id = _id;
         this.date = date;
         this.note = note;
@@ -31,11 +31,11 @@ public class Todo {
     public Todo() {
     }
 
-    public ObjectId get_id() {
+    public Map<String, String> get_id() {
         return _id;
     }
 
-    public void set_id(ObjectId _id) {
+    public void set_id(Map<String, String> _id) {
         this._id = _id;
     }
 

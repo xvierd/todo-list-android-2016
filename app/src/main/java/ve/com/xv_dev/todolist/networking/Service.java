@@ -1,12 +1,13 @@
 package ve.com.xv_dev.todolist.networking;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.*;
-import okhttp3.Response;
+import retrofit2.*;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -62,13 +63,13 @@ public class Service {
         return networkService.editTodo(data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorResumeNext(new Func1<Throwable, Observable<? extends String>>() {
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends retrofit2.Response<String>>>() {
                     @Override
-                    public Observable<? extends String> call(Throwable throwable) {
+                    public Observable<? extends retrofit2.Response<String>> call(Throwable throwable) {
                         return Observable.error(throwable);
                     }
                 })
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Subscriber<retrofit2.Response<String>>() {
                     @Override
                     public void onCompleted() {
 
@@ -76,12 +77,14 @@ public class Service {
 
                     @Override
                     public void onError(Throwable e) {
+                        NetworkError networkError = new NetworkError(e);
+                        Log.i("RecyclerTodoAdapter", networkError.getMessage());
                         callback.onError(new NetworkError(e));
 
                     }
 
                     @Override
-                    public void onNext(String response) {
+                    public void onNext(retrofit2.Response<String> response) {
                         callback.onSuccess(response);
 
                     }
@@ -128,7 +131,7 @@ public class Service {
         void onError(NetworkError networkError);
     }
     public interface EditTodoCallback{
-        void onSuccess(String response);
+        void onSuccess(retrofit2.Response<String> response);
         void onError(NetworkError networkError);
     }
 }

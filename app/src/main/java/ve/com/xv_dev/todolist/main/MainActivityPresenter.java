@@ -57,7 +57,7 @@ public class MainActivityPresenter {
         Subscription subscription = service.editTodo(new Service.EditTodoCallback() {
 
             @Override
-            public void onSuccess(String response) {
+            public void onSuccess(retrofit2.Response response) {
                 view.removeWait();
             }
 

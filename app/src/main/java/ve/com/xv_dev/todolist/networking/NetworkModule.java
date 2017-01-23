@@ -64,8 +64,8 @@ public class NetworkModule {
                 })
                 .cache(cache)
                 .cookieJar(new CookieStore())
-                .connectTimeout(20, TimeUnit.SECONDS) //TODO time in build.gradle
-                .readTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS) //TODO time in build.gradle
+                .readTimeout(60, TimeUnit.SECONDS)
                 /*.addInterceptor(new Interceptor() {
                     @Override
                     public okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {

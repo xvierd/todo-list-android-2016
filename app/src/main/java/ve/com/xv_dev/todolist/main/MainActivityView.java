@@ -20,4 +20,6 @@ public interface MainActivityView {
     void todoListResponse(ArrayList<Todo> todoList);
 
     void initRecycler();
+
+    void toastMessage();
 }

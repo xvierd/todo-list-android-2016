@@ -1,26 +1,23 @@
 package ve.com.xv_dev.todolist.main.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 import ve.com.xv_dev.todolist.R;
-import ve.com.xv_dev.todolist.main.MainActivityPresenter;
+import ve.com.xv_dev.todolist.main.MainActivityView;
 import ve.com.xv_dev.todolist.models.Todo;
 import ve.com.xv_dev.todolist.networking.NetworkError;
 import ve.com.xv_dev.todolist.networking.Service;
@@ -33,6 +30,7 @@ public class RecyclerTodoAdapter extends RecyclerView.Adapter<RecyclerTodoAdapte
     public ArrayList<Todo> items;
     private CompositeSubscription subscriptions = new CompositeSubscription();
     public Service service;
+    MainActivityView mainActivityView;
 
 
 
@@ -55,17 +53,22 @@ public class RecyclerTodoAdapter extends RecyclerView.Adapter<RecyclerTodoAdapte
             switch (v.getId()) {
                 case R.id.is_done:
                     Map<String, Object> data = new HashMap<>();
-                    data.put("_id", items.get(getAdapterPosition()).get_id());
-                    data.put("executed", items.get(getAdapterPosition()).getExecuted());
+                    data.put("_id", items.get(getAdapterPosition()).get_id().get("$oid"));
+                    data.put("executed", !items.get(getAdapterPosition()).getExecuted());
                     Subscription subscription = service.editTodo(new Service.EditTodoCallback() {
 
                         @Override
-                        public void onSuccess(String response) {
+                        public void onSuccess(retrofit2.Response<String> response) {
+                            Log.i("response", String.valueOf(response.code()));
+                            items.get(getAdapterPosition()).setExecuted(!items.get(getAdapterPosition()).getExecuted());
                         }
 
                         @Override
                         public void onError(NetworkError networkError) {
-                            // HttpException httpException = (HttpException) networkError.getError();
+                            //HttpException httpException = (HttpException) networkError.getError();
+                            mainActivityView.toastMessage();
+                            is_done.setChecked(items.get(getAdapterPosition()).getExecuted());
+                            //Log.i("RecyclerTodoAdapter", httpException.message());
                         }
 
                     }, data);
@@ -86,9 +89,10 @@ public class RecyclerTodoAdapter extends RecyclerView.Adapter<RecyclerTodoAdapte
         }*/
     }
 
-    public RecyclerTodoAdapter(Service service, ArrayList<Todo> items) {
+    public RecyclerTodoAdapter(Service service, ArrayList<Todo> items, MainActivityView mainActivityView) {
         this.items = items;
         this.service = service;
+        this.mainActivityView = mainActivityView;
     }
 
     @Override

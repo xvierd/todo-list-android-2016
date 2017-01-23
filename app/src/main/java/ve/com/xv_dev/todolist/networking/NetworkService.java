@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.*;
 import retrofit2.*;
+import retrofit2.Response;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -29,7 +29,7 @@ public interface NetworkService {
 
     @FormUrlEncoded
     @PUT("api/todo")
-    Observable<String> editTodo(@FieldMap Map<String, Object> data);
+    Observable<Response<String>> editTodo(@FieldMap Map<String, Object> data);
     /*@POST("app/users")
     Observable<List<User>> getCityList();
 

@@ -144,7 +144,7 @@ public class MainActivity extends BaseApp
     public void todoListResponse(ArrayList<Todo> todoList) {
 
 
-        adapter = new RecyclerTodoAdapter(service,todoList);
+        adapter = new RecyclerTodoAdapter(service, todoList, this);
         recycler.setAdapter(adapter);
 
         Long date;
@@ -165,5 +165,11 @@ public class MainActivity extends BaseApp
 
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
+    }
+
+    @Override
+    public void toastMessage() {
+        Snackbar.make(findViewById(R.id.content_main), "Sorry communication error", Snackbar.LENGTH_LONG)
+                .show();
     }
 }

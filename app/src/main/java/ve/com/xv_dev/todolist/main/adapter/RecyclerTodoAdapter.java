@@ -66,7 +66,7 @@ public class RecyclerTodoAdapter extends RecyclerView.Adapter<RecyclerTodoAdapte
                         @Override
                         public void onError(NetworkError networkError) {
                             //HttpException httpException = (HttpException) networkError.getError();
-                            mainActivityView.toastMessage();
+                            mainActivityView.toastMessage("Sorry communication error");
                             is_done.setChecked(items.get(getAdapterPosition()).getExecuted());
                             //Log.i("RecyclerTodoAdapter", httpException.message());
                         }

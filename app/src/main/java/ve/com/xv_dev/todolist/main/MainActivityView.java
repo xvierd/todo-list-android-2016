@@ -21,5 +21,6 @@ public interface MainActivityView {
 
     void initRecycler();
 
-    void toastMessage();
+    void toastMessage(String message);
+
 }

@@ -91,6 +91,39 @@ public class Service {
                 });
     }
 
+    public Subscription saveTodo(final SaveTodoCallback callback, Map<String, Object> data) {
+
+        return networkService.saveTodo(data)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends Todo>>() {
+                    @Override
+                    public Observable<? extends Todo> call(Throwable throwable) {
+                        return Observable.error(throwable);
+                    }
+                })
+                .subscribe(new Subscriber<Todo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        NetworkError networkError = new NetworkError(e);
+                        Log.i("RecyclerTodoAdapter", networkError.getMessage());
+                        callback.onError(new NetworkError(e));
+
+                    }
+
+                    @Override
+                    public void onNext(Todo todo) {
+                        callback.onSuccess(todo);
+
+                    }
+                });
+    }
+
    /* public Subscription loginUser(final LoginUserCallback callback, Map<String, String> data) {
 
         return networkService.loginUser(data)
@@ -132,6 +165,10 @@ public class Service {
     }
     public interface EditTodoCallback{
         void onSuccess(retrofit2.Response<String> response);
+        void onError(NetworkError networkError);
+    }
+    public interface SaveTodoCallback{
+        void onSuccess(Todo todo);
         void onError(NetworkError networkError);
     }
 }

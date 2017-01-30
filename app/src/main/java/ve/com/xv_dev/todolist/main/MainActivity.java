@@ -1,5 +1,6 @@
 package ve.com.xv_dev.todolist.main;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,9 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -45,13 +51,31 @@ public class MainActivity extends BaseApp
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getTodoList().inject(this);
+        final MainActivityPresenter presenter = new MainActivityPresenter(service, this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                final Dialog dialog = new Dialog(view.getContext());
+                dialog.setContentView(R.layout.dialog_create_todo);
+                dialog.setTitle("Title...");
+
+                final TextView text = (TextView) dialog.findViewById(R.id.text);
+
+                Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("note", text.getText().toString());
+                        presenter.saveTodo(data);
+                        //dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
         });
 
@@ -64,7 +88,6 @@ public class MainActivity extends BaseApp
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        MainActivityPresenter presenter = new MainActivityPresenter(service, this);
         presenter.getTodoList();
     }
 
@@ -168,8 +191,9 @@ public class MainActivity extends BaseApp
     }
 
     @Override
-    public void toastMessage() {
-        Snackbar.make(findViewById(R.id.content_main), "Sorry communication error", Snackbar.LENGTH_LONG)
+    public void toastMessage(String message) {
+        Snackbar.make(findViewById(R.id.content_main), message, Snackbar.LENGTH_LONG)
                 .show();
     }
+
 }

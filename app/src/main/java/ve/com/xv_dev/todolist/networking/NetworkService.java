@@ -30,6 +30,10 @@ public interface NetworkService {
     @FormUrlEncoded
     @PUT("api/todo")
     Observable<Response<String>> editTodo(@FieldMap Map<String, Object> data);
+
+    @FormUrlEncoded
+    @POST("api/todo")
+    Observable<Todo> saveTodo(@FieldMap Map<String, Object> data);
     /*@POST("app/users")
     Observable<List<User>> getCityList();
 

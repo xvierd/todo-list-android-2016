@@ -73,6 +73,30 @@ public class MainActivityPresenter {
         subscriptions.add(subscription);
     }
 
+    public void saveTodo(Map<String, Object> data) {
+
+
+        view.showWait();
+        Subscription subscription = service.saveTodo(new Service.SaveTodoCallback() {
+
+            @Override
+            public void onSuccess(Todo todo) {
+                view.removeWait();
+                view.toastMessage("Save success");
+            }
+
+            @Override
+            public void onError(NetworkError networkError) {
+                // HttpException httpException = (HttpException) networkError.getError();
+                view.onFailure(networkError.getMessage());
+                view.removeWait();
+            }
+
+        }, data);
+
+        subscriptions.add(subscription);
+    }
+
     public void onStop() {
         subscriptions.unsubscribe();
     }

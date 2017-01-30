@@ -83,6 +83,7 @@ public class MainActivityPresenter {
             public void onSuccess(Todo todo) {
                 view.removeWait();
                 view.toastMessage("Save success");
+                view.reloadList(todo);
             }
 
             @Override

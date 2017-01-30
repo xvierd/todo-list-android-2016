@@ -43,6 +43,9 @@ public class MainActivity extends BaseApp
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
+    private ArrayList<Todo> todoList;
+    Dialog dialog;
+    MainActivityPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,13 +54,13 @@ public class MainActivity extends BaseApp
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getTodoList().inject(this);
-        final MainActivityPresenter presenter = new MainActivityPresenter(service, this);
+        presenter = new MainActivityPresenter(service, this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(view.getContext());
+                dialog = new Dialog(view.getContext());
                 dialog.setContentView(R.layout.dialog_create_todo);
                 dialog.setTitle("Title...");
 
@@ -166,18 +169,14 @@ public class MainActivity extends BaseApp
     @Override
     public void todoListResponse(ArrayList<Todo> todoList) {
 
-
+        this.todoList = todoList;
         adapter = new RecyclerTodoAdapter(service, todoList, this);
         recycler.setAdapter(adapter);
-
         Long date;
-
         for(Todo todo : todoList){
             date = todo.getDate().get("$date");
             Log.i("date", String.valueOf(date));
-
         }
-
     }
 
     @Override
@@ -194,6 +193,15 @@ public class MainActivity extends BaseApp
     public void toastMessage(String message) {
         Snackbar.make(findViewById(R.id.content_main), message, Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    public void reloadList(Todo todo) {
+        todoList.add(todo);
+        adapter = new RecyclerTodoAdapter(service, todoList, this);
+        recycler.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        dialog.dismiss();
     }
 
 }

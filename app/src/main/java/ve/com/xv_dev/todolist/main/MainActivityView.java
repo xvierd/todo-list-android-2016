@@ -23,4 +23,6 @@ public interface MainActivityView {
 
     void toastMessage(String message);
 
+    void reloadList(Todo todo);
+
 }

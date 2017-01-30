@@ -95,6 +95,10 @@ public class RecyclerTodoAdapter extends RecyclerView.Adapter<RecyclerTodoAdapte
         this.mainActivityView = mainActivityView;
     }
 
+    public ArrayList<Todo> getItems(){
+        return items;
+    }
+
     @Override
     public int getItemCount() {
         return items.size();
@@ -112,4 +116,6 @@ public class RecyclerTodoAdapter extends RecyclerView.Adapter<RecyclerTodoAdapte
         viewHolder.title.setText(items.get(i).getNote());
         viewHolder.is_done.setChecked(items.get(i).getExecuted());
     }
+
+
 }
